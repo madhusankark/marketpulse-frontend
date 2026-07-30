@@ -47,9 +47,7 @@ export function MarketProvider({ children }) {
   }, [fetchIndices]);
 
   useEffect(() => {
-    const socketUrl = process.env.NODE_ENV === 'production'
-      ? (process.env.REACT_APP_API_URL || window.location.origin)
-      : 'http://localhost:5000';
+    const socketUrl = process.env.REACT_APP_API_URL || (process.env.NODE_ENV === 'production' ? window.location.origin : 'http://localhost:5000');
 
     const socket = io(socketUrl, {
       path: '/socket.io',
