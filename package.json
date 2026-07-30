@@ -20,7 +20,8 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test"
+    "test": "react-scripts test",
+    "prod": "node server.js"
   },
   "proxy": "http://localhost:5000",
   "browserslist": {
