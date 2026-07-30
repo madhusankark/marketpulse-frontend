@@ -93,4 +93,15 @@ export const notificationAPI = {
   remove: (id) => api.delete(`/notifications/${id}`)
 };
 
+export const adminAPI = {
+  getDashboard: () => api.get('/admin/dashboard'),
+  getUsers: (params = {}) => api.get('/admin/users', { params }),
+  updateUserStatus: (id, isActive) => api.put(`/admin/users/${id}/status`, { isActive }),
+  updateUserRole: (id, role) => api.put(`/admin/users/${id}/role`, { role }),
+  getLogs: (params = {}) => api.get('/admin/logs', { params }),
+  getStats: () => api.get('/admin/stats'),
+  getHealth: () => api.get('/admin/health'),
+  getMarketOverview: () => api.get('/admin/market-overview')
+};
+
 export default api;
