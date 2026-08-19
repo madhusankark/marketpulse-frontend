@@ -53,7 +53,13 @@ export function MarketProvider({ children }) {
     if (!socketUrl && typeof window !== 'undefined') {
       const host = window.location.hostname;
       const port = window.location.port;
-      if (host === 'localhost' || host === '127.0.0.1') {
+      if (host.includes('onrender.com')) {
+        if (host.includes('c726')) {
+          socketUrl = 'https://marketpulse-backend-1y9c.onrender.com';
+        } else {
+          socketUrl = `https://${host.replace('-frontend', '-backend')}`;
+        }
+      } else if (host === 'localhost' || host === '127.0.0.1') {
         if (port === '3000' || port === '3001') {
           socketUrl = 'http://localhost:5000';
         }
