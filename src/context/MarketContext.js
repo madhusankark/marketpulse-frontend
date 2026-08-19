@@ -52,12 +52,13 @@ export function MarketProvider({ children }) {
 
     if (!socketUrl && typeof window !== 'undefined') {
       const host = window.location.hostname;
-      if (host.includes('onrender.com')) {
-        const backendHost = host.replace('-frontend', '-backend');
-        socketUrl = `https://${backendHost}`;
-      } else if (host === 'localhost' || host === '127.0.0.1') {
-        socketUrl = 'http://localhost:5000';
-      } else {
+      const port = window.location.port;
+      if (host === 'localhost' || host === '127.0.0.1') {
+        if (port === '3000' || port === '3001') {
+          socketUrl = 'http://localhost:5000';
+        }
+      }
+      if (!socketUrl) {
         socketUrl = window.location.origin;
       }
     }

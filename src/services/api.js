@@ -6,12 +6,11 @@ function getBackendUrl() {
 
   if (typeof window !== 'undefined') {
     const host = window.location.hostname;
-    if (host.includes('onrender.com')) {
-      const backendHost = host.replace('-frontend', '-backend');
-      return `https://${backendHost}`;
-    }
+    const port = window.location.port;
     if (host === 'localhost' || host === '127.0.0.1') {
-      return 'http://localhost:5000';
+      if (port === '3000' || port === '3001') {
+        return 'http://localhost:5000';
+      }
     }
   }
   return '';
