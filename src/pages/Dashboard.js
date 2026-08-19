@@ -15,13 +15,13 @@ export default function Dashboard() {
     const loadData = async () => {
       try {
         const [g, l, a] = await Promise.all([
-          stockAPI.getGainers(5).catch(() => ({ data: [] })),
-          stockAPI.getLosers(5).catch(() => ({ data: [] })),
-          stockAPI.getMostActive(5).catch(() => ({ data: [] }))
+          stockAPI.getGainers(5).catch(() => null),
+          stockAPI.getLosers(5).catch(() => null),
+          stockAPI.getMostActive(5).catch(() => null)
         ]);
-        setGainers(g.data);
-        setLosers(l.data);
-        setMostActive(a.data);
+        setGainers(Array.isArray(g?.data) ? g.data : (Array.isArray(g) ? g : []));
+        setLosers(Array.isArray(l?.data) ? l.data : (Array.isArray(l) ? l : []));
+        setMostActive(Array.isArray(a?.data) ? a.data : (Array.isArray(a) ? a : []));
       } catch (err) { /* silent */ }
       finally { setLoading(false); }
     };

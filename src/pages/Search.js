@@ -61,10 +61,15 @@ export default function Search() {
     const filter = searchParams.get('filter');
     const sector = searchParams.get('sector');
     if (q) { setQuery(q); fetchStocks(q); setActiveTab('search'); setSectorFor(''); }
-    if (sector) { setQuery(''); fetchSectorStocks(sector); setActiveTab('search'); setSectorFor(sector); }
-    if (filter) {
+    else if (sector) { setQuery(''); fetchSectorStocks(sector); setActiveTab('search'); setSectorFor(sector); }
+    else if (filter) {
       setActiveTab(filter);
       loadFilterData(filter);
+    } else {
+      setQuery('');
+      fetchStocks('', 20);
+      setActiveTab('search');
+      setSectorFor('');
     }
   }, [searchParams]);
 
