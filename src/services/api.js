@@ -33,12 +33,25 @@ api.interceptors.request.use((config) => {
 
 api.interceptors.response.use(
   (response) => response.data,
-  (error) => {
+  async (error) => {
+    const config = error.config;
     if (error.response?.status === 401) {
       localStorage.removeItem('token');
       localStorage.removeItem('user');
       window.location.href = '/login';
+      return Promise.reject(error.response?.data || { message: error.message });
     }
+
+    if (config && (!config.method || config.method.toUpperCase() === 'GET')) {
+      config._retryCount = config._retryCount || 0;
+      if (config._retryCount < 3) {
+        config._retryCount += 1;
+        const delay = config._retryCount * 1500;
+        await new Promise(res => setTimeout(res, delay));
+        return api(config);
+      }
+    }
+
     return Promise.reject(error.response?.data || { message: error.message });
   }
 );
