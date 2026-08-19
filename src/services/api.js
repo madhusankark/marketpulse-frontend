@@ -1,7 +1,24 @@
 import axios from 'axios';
 
-const rawUrl = (typeof window !== 'undefined' && window.REACT_APP_API_URL) || process.env.REACT_APP_API_URL || '';
-const API_BASE_URL = rawUrl ? rawUrl.replace(/\/+$/, '') + '/api' : '/api';
+function getBackendUrl() {
+  const envUrl = (typeof window !== 'undefined' && window.REACT_APP_API_URL) || process.env.REACT_APP_API_URL || '';
+  if (envUrl) return envUrl.replace(/\/+$/, '');
+
+  if (typeof window !== 'undefined') {
+    const host = window.location.hostname;
+    if (host.includes('onrender.com')) {
+      const backendHost = host.replace('-frontend', '-backend');
+      return `https://${backendHost}`;
+    }
+    if (host === 'localhost' || host === '127.0.0.1') {
+      return 'http://localhost:5000';
+    }
+  }
+  return '';
+}
+
+const BASE_URL = getBackendUrl();
+const API_BASE_URL = BASE_URL ? `${BASE_URL}/api` : '/api';
 
 const api = axios.create({
   baseURL: API_BASE_URL,

@@ -47,17 +47,29 @@ export function MarketProvider({ children }) {
   }, [fetchIndices]);
 
   useEffect(() => {
-    const apiUrl = (typeof window !== 'undefined' && window.REACT_APP_API_URL) || process.env.REACT_APP_API_URL || '';
-    const socketUrl = apiUrl || (process.env.NODE_ENV === 'production' ? window.location.origin : 'http://localhost:5000');
+    const envUrl = (typeof window !== 'undefined' && window.REACT_APP_API_URL) || process.env.REACT_APP_API_URL || '';
+    let socketUrl = envUrl ? envUrl.replace(/\/+$/, '') : '';
+
+    if (!socketUrl && typeof window !== 'undefined') {
+      const host = window.location.hostname;
+      if (host.includes('onrender.com')) {
+        const backendHost = host.replace('-frontend', '-backend');
+        socketUrl = `https://${backendHost}`;
+      } else if (host === 'localhost' || host === '127.0.0.1') {
+        socketUrl = 'http://localhost:5000';
+      } else {
+        socketUrl = window.location.origin;
+      }
+    }
 
     const socket = io(socketUrl, {
       path: '/socket.io',
-      transports: ['polling'],
+      transports: ['polling', 'websocket'],
       upgrade: true,
       reconnection: true,
-      reconnectionAttempts: 3,
-      reconnectionDelay: 3000,
-      timeout: 8000,
+      reconnectionAttempts: 5,
+      reconnectionDelay: 2000,
+      timeout: 10000,
       forceNew: false
     });
     socketRef.current = socket;
